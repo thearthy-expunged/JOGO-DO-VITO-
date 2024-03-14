@@ -48,12 +48,13 @@ var archer,
   fumes,
   level_up,
   archer001,
-  archer002
+  archer002,
+  archer003
 var archers = [],
   arrows = [],
   money_makers = [],
   archers1 = [];
-(archers0 = []), (arrows1 = []), (bombs = []), (archers2 = []), (fumess = []),(arrows2 = []),(archers001 = []),(mccs = []),(arrows3 = []),(archers002 = [])
+(archers0 = []), (arrows1 = []), (bombs = []), (archers2 = []), (fumess = []),(arrows2 = []),(archers001 = []),(mccs = []),(arrows3 = []),(archers002 = [])(archers003 = [])(arrows4 = [])
 var coins;
 var enemys1;
 var enemy1h = { Sprite: "", vida: 10 };
@@ -193,6 +194,11 @@ function setup() {
   archer002img.size(20,50)
   archer002img.position(width/3.4,height/3)
   archer002img.mouseClicked(place9)
+  
+  archer002img = createImg("archer30.png")
+  archer002img.size(30,75)
+  archer002img.position(width/3.4,height/3)
+  archer002img.mouseClicked(placeA)
 
   level_upimg = createImg("level_up.png")
   level_upimg.size(36,42)
@@ -282,7 +288,39 @@ function draw() {
         inimigo.remove();
       }
 });
-    
+inimigos[i].sprite.overlap(arrows4, (inimigo, flecha4) => {
+  arrow = createSprite(flecha4.x, flecha4.y);
+  arrow.addImage(arrowimg);
+  arrow.x -= 120
+  arrow.scale = 2;
+  arrow.velocityX += 5;
+  arrow.lifetime = 300;
+  arrows3.push(arrow);
+  arrow = createSprite(flecha4.x, flecha4.y);
+  arrow.addImage(arrowimg);
+  arrow.x -= 120
+  arrow.scale = 2;
+  arrow.velocityX += 5;
+  arrow.velocityY += 1
+  arrow.lifetime = 300;
+  arrows3.push(arrow);
+  arrow = createSprite(flecha4.x, flecha4.y);
+  arrow.addImage(arrowimg);
+  arrow.x -= 120
+  arrow.scale = 2;
+  arrow.velocityX += 5;
+  arrow.velocityY -= 1
+  arrow.lifetime = 300;
+  arrows3.push(arrow)
+  if (inimigos[i].life > 0) {
+    console.log(inimigos[i].life);
+    inimigos[i].life -= 25;
+    flecha3.remove();
+  } else {
+    flecha3.remove();
+    inimigo.remove();
+  }
+});    
     inimigos[i].sprite.overlap(arrows2, (inimigo, flecha2) => {
             arrow = createSprite(flecha2.x, flecha2.y);
             arrow.addImage(arrowimg);
@@ -307,6 +345,14 @@ function draw() {
             arrow.velocityY -= 1
             arrow.lifetime = 300;
             arrows.push(arrow)
+            if (inimigos[i].life > 0) {
+              console.log(inimigos[i].life);
+              inimigos[i].life -= 500;
+              flecha4.remove();
+            } else {
+              //flecha4.remove();
+              inimigo.remove();
+            }
             if (inimigos[i].life > 0) {
               console.log(inimigos[i].life);
               inimigos[i].life -= 5;
@@ -693,6 +739,9 @@ function mouseReleased() {
   if(clicou == 9){
     archers002.push(archer002)
   }
+  if(clicou == 10){
+    archers003.push(archer003)
+  }
   clicou = 0;
 }
 function shooting() {
@@ -711,6 +760,18 @@ function shooting() {
     arrow1.velocityX += 5;
     arrow1.lifetime = 300;
     arrows1.push(arrow1);
+  }
+  for (a = 0; a <= 500; a += 500) {
+    setTimeout(() => {
+      for (i = 0; i < archers1.length; i++) {
+        arrow = createSprite(archers1[i].x, archers1[i].y);
+        arrow.addImage(arrowimg);
+        arrow.scale = 2;
+        arrow.velocityX += 5;
+        arrow.lifetime = 300;
+        arrows.push(arrow);
+      }
+    }, a);
   }
   for (i = 0; i < archers2.length; i++) {
     fumes = createSprite(archers2[i].x, archers2[i].y);
@@ -736,21 +797,18 @@ function shooting() {
     arrow.lifetime = 300
     arrows3.push(arrow)
   }
-}
-function shooting2() {
-  for (a = 0; a <= 500; a += 500) {
-    setTimeout(() => {
-      for (i = 0; i < archers1.length; i++) {
-        arrow = createSprite(archers1[i].x, archers1[i].y);
-        arrow.addImage(arrowimg);
-        arrow.scale = 2;
-        arrow.velocityX += 5;
-        arrow.lifetime = 300;
-        arrows.push(arrow);
-      }
-    }, a);
+  for (i = 0; i < archers003.length; i++){
+    arrow = createSprite(archers003[i].x,archers003[i].y)
+    arrow.addImage(arrowimg)
+    arrow.scale = 2
+    arrow.velocityX +=5
+    arrow.lifetime = 300
+    arrows4.push(arrow)
   }
 }
+//function shooting2) {
+  
+
 function produce() {
   for (i = 0; i < money_makers.length; i++) {
     money_coinm = createSprite(money_makers[i].x, money_makers[i].y);
@@ -765,10 +823,7 @@ function produce() {
   }
 }
 /*function mouseClicked() {
-  if (money > 0) {
-    money -= 1;
-    shooting();
-  }
+  
 }*/
 function mouseClicked() {
   invsprite1.overlap(coins, function (invsprite1, collided) {
@@ -779,6 +834,10 @@ function mouseClicked() {
     collided.remove()
     money += 200
   })
+  if (money > 0) {
+    money -= 25;
+    shooting();
+  }
 }
 var clicou = 0;
 function place1() {
@@ -856,6 +915,15 @@ function place9(){
     archer002 = createSprite(mouseX, mouseY)
     archer002.addAnimation("archer002Ani",archer002Ani)
     archer002.scale = 2
+  }
+}
+function place10(){
+  if(money >= 750){
+    clicou = 10
+    money -=750
+    archer003 = createSprite(mouseX, mouseY)
+    archer003.addAnimation("archer002Ani",archer002Ani)
+    archer003.scale = 3
   }
 }
 function enemysp() {
